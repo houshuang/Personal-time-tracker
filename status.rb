@@ -9,19 +9,22 @@ ensure_file(Filename) # just to avoid crashing
 # get last activity logged
 cat, t_elapsed = status
 cumul.add(cat, t_elapsed) # add the current status to the cumulative totals, because they won't emerge from below
-text = "Current is #{cat}, spent #{minutes_format(t_elapsed)}\r\rSo far today:\r"
+text = "Current is #{cat}, spent #{minutes_format(t_elapsed)}.\r\rSo far today:\r"
 
 # go through today's file, and add up all the totals
 f = File.open(Filename,'r')
 oldcategory = 0
 oldtime = 0
+tot_time = 0 # spent by all projects today (ie. time in front of the computer)
 f.each do |line|
   time, category = line.split("\t")
   category.strip!
   next if oldcategory == category # ignore if someone pressed the same category twice - just count it as one long event
   
   unless oldcategory == 0 # if they were resting, and then started an event. we don't count resting.
-    cumul.add(oldcategory,(time.to_i-oldtime.to_i))
+    t_spent = time.to_i-oldtime.to_i
+    cumul.add(oldcategory, t_spent)
+    tot_time = tot_time + t_spent
   end
   
   # store it, and move to the next line
@@ -33,6 +36,7 @@ end
 cumul.each do |x,y| 
   text << "#{x}: #{minutes_format(y)}\r"
 end
+text << "\rTotal: #{minutes_format(tot_time)}\r"
 
 # print hotkeys, as a reminder
 text << "\rHotkeys:\r"
