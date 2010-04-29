@@ -42,12 +42,20 @@ end
 
 def growl(title, text, test=false)
   unless test
-    `growl "#{title}" -m "#{text}"` 
+    `sh #{Path}/growl.sh "#{title}" -m "#{text}"` 
   else
     puts "Title: #{title.gsub("\r","\n")}\n#{text.gsub("\r","\n")}" # just for debugging, by default off
   end
 end
 
-def minutes_format(min)
- sprintf("%d.1 min", (min)/60.0)
+def minutes_format(sec)
+  min = sec / 60.0
+  out = ''
+  if min > 60
+    hr = min / 60
+    min = min - (hr.to_i * 60)
+    out << "#{hr.to_i} hrs "
+  end
+  out << "#{min.to_i} min" if min > 0
+  out
 end
