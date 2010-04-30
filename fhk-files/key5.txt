@@ -1,0 +1,1 @@
+/usr/bin/ruby /Users/stian/src/tracker/entry.rb 5
