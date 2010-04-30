@@ -4,3 +4,9 @@ Inspired by this New York Times article: http://www.nytimes.com/2010/05/02/magaz
 
 This was developed by Stian Håklev, shaklev@gmail.com, using a few snippets from other sources. I release
 it under Public Domain. But feel free to share any modifications. 
+
+TODO:
+- deal with midnight-switch
+- script that processes timestamp files and spits out lists of activities (what format?)
+- the ideal thing would be to find existing software/website set up to analyze this data, rather than to do it ourselves 
+  (can spit out in whatever format is desired, pretty much)
