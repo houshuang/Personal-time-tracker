@@ -1,48 +1,67 @@
-Read about this project on my blog: http://reganmian.net/blog/2010/04/29/personal-time-tracker-with-ruby-and-growl/
+Read about this project on my blog: http://reganmian.net/blog/2010/04/29/personal-time-tracker-with-ruby-and-growl
 
 Inspired by this New York Times article: http://www.nytimes.com/2010/05/02/magazine/02self-measurement-t.html
 
-This was developed by Stian Håklev, shaklev@gmail.com, using a few snippets from other sources. I release
-it under Public Domain. But feel free to share any modifications. I totally wrote this to scratch my own itch,
-but if you find this, or a version of this, useful, letting me know would totally make my day.
+This was developed by Stian Håklev, shaklev@gmail.com, using a few snippets
+from other sources. I release it under Public Domain. But feel free to share
+any modifications. I totally wrote this to scratch my own itch, but if you
+find this, or a version of this, useful, letting me know would totally make my
+day.
 
 "INSTALLATION"
 
 configuration and running
-- first, edit the Categories list in library.rb to reflect the categories you care about. Personally I have chosen
-  0 to be "stepping away from the computer", this category isn't counted. 9 is reserved for the status overview,
-  and I use 6 as "goofing off", ie. doing anything else on my computer. I also left 7 and 8 as two nameless projects,
-  these are useful if I want to track something for just a day or two (right now I am using project 1 to track time
-  I spend on this program). However, anything between 1-8 is all up to you. You can also change it as many times 
-  as you want - it writes the entire text, not the number, to the data file, so your data won't be confused if you track
-  "editing wikipedia" on 3 for two days, and then change 3 to tracking "contributing to KDE"
-- for every time you start a new activity (and by extension, end an old one - there isn't a way of "just ending" an
-  activity, you always start a new one - even if the new one is "resting" (0)), you run entry.rb, with the number 
-  as a command line argument. For example, /usr/bin/ruby entry.rb 4, which will change your status to category 4,
-  write a timestamp in today's file, and pop up a short message about that.
+- first, edit the Categories list in library.rb to reflect the categories you
+  care about. Personally I have chosen 0 to be "stepping away from the
+  computer", this category isn't counted. 9 is reserved for the status
+  overview, and I use 6 as "goofing off", ie. doing anything else on my
+  computer. I also left 7 and 8 as two nameless projects, these are useful if
+  I want to track something for just a day or two (right now I am using
+  project 1 to track time I spend on this program). However, anything between
+  1-8 is all up to you. You can also change it as many times as you want - it
+  writes the entire text, not the number, to the data file, so your data won't
+  be confused if you track "editing wikipedia" on 3 for two days, and then
+  change 3 to tracking "contributing to KDE"
+- for every time you start a new activity (and by extension, end an old one -
+  there isn't a way of "just ending" an activity, you always start a new one -
+  even if the new one is "resting" (0)), you run entry.rb, with the number as
+  a command line argument. For example, /usr/bin/ruby entry.rb 4, which will
+  change your status to category 4, write a timestamp in today's file, and pop
+  up a short message about that.
 - to display the current status, you run status.rb
 
 global hotkeys
-- the whole point of this program is to be extremely unobtrusive and "fit in" with your workflow, so of course, you don't
-  want to have to switch to terminal and type "entry 4" every time you start doing something else. I have tied entry 0-8
-  to Cmd+Opt 0-8, and status to Cmd+Opt 9 (note that theoretically, you can tie Cmd+Alt S to status, and you can assign
-  all the letters in the alphabet to differently numbered categories - I wouldn't recommend it though, the point is that
-  there shouldn't be much cognitive load when switching tasks)
-- I found two ways of assigning global hotkeys, one is to use Automator on Mac, create new workflows that launch the script
-  with different parameters as services, and then assign hot keys to those services in the keyboard control panel
-- The other way is to use FreeHotKeys (http://www.batista.org/freehotkeys.html), a free program which I am currently using.
-  To configure that program, you need to copy the files in the fhk-files directory to the ~/Library/Preferences/FreeHotKeys
-  directory (and do a global search and replace to replace the path to the ruby script with the path where it resides on
-  your system)
+
+- the whole point of this program is to be extremely unobtrusive and "fit in"
+  with your workflow, so of course, you don't want to have to switch to
+  terminal and type "entry 4" every time you start doing something else. I
+  have tied entry 0-8 to Cmd+Opt 0-8, and status to Cmd+Opt 9 (note that
+  theoretically, you can tie Cmd+Alt S to status, and you can assign all the
+  letters in the alphabet to differently numbered categories - I wouldn't
+  recommend it though, the point is that there shouldn't be much cognitive
+  load when switching tasks) 
+- I found two ways of assigning global hotkeys, one is to use Automator on
+  Mac, create new workflows that launch the script with different parameters
+  as services, and then assign hot keys to those services in the keyboard
+  control panel
+- The other way is to use FreeHotKeys
+  (http://www.batista.org/freehotkeys.html), a free program which I am
+  currently using. To configure that program, you need to copy the files in
+  the fhk-files directory to the ~/Library/Preferences/FreeHotKeys directory
+  (and do a global search and replace to replace the path to the ruby script
+  with the path where it resides on your system)
 
 TODO:
 - deal with midnight-switch
-- script that processes timestamp files and spits out lists of activities (what format?)
+- script that processes timestamp files and spits out lists of activities
+  (what format?)
 - replace text files with sqlite?
-- the ideal thing would be to find existing software/website set up to analyze this data, rather than to do it ourselves 
-  (can spit out in whatever format is desired, pretty much)
+- the ideal thing would be to find existing software/website set up to analyze
+  this data, rather than to do it ourselves (can spit out in whatever format
+  is desired, pretty much)
 
 IDEA:
-- use YAML dumping/loading to keep running tallies of different categories: today... first time run after new day, 
-  add to tallies for weekly, monthly. (or be able to set a benchmark time - from now on)...
+- use YAML dumping/loading to keep running tallies of different categories:
+  today... first time run after new day, add to tallies for weekly, monthly.
+  (or be able to set a benchmark time - from now on)...
   
