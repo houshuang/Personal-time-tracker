@@ -32,8 +32,15 @@ configuration and running
   up a short message about that.
 - to display the current status, you run status.rb
 
-global hotkeys
+growl
+- this program uses growl, which has to be installed (http://growl.info/). It
+  already often is, but in addition, it needs growlnotify. Download and mount
+  the package, and go to the Extras, and then run install.sh to put it in
+  /usr/local/bin. 
+- you also need to go to Growl config and toggle "listen to incoming
+  notifications" under the Network tab
 
+global hotkeys
 - the whole point of this program is to be extremely unobtrusive and "fit in"
   with your workflow, so of course, you don't want to have to switch to
   terminal and type "entry 4" every time you start doing something else. I
@@ -61,6 +68,8 @@ TODO:
 - the ideal thing would be to find existing software/website set up to analyze
   this data, rather than to do it ourselves (can spit out in whatever format
   is desired, pretty much)
+- create a seamless installer (I am not going to do this, but others are
+  welcome to!)
 
 IDEA:
 - use YAML dumping/loading to keep running tallies of different categories:
