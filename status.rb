@@ -1,47 +1,50 @@
-# uses growl to show current activity and time elapsed, today's totals for all categories, and 
+# encoding: utf-8
+
+# uses growl to show current activity and time elapsed, today's totals for all categories, and
 # cheat sheet for keyboard codes
 
-require "#{File.dirname($0)}/library" # script might be launched from another directory
+$:.push(File.dirname($0))
+require 'library'
+require 'settings'
+require 'csv'
 
-cumul = Hash.new # will hold the totals for today for each category
-ensure_file(Filename) # just to avoid crashing
-
-# get last activity logged
 cat, t_elapsed = status
-cumul.add(cat, t_elapsed) # add the current status to the cumulative totals, because they won't emerge from below
-text = "Current is #{cat}, spent #{minutes_format(t_elapsed)}.\r\rSo far today:\r"
 
-# go through today's file, and add up all the totals
-f = File.open(Filename,'r')
-oldcategory = 0
-oldtime = 0
-tot_time = 0 # spent by all projects today (ie. time in front of the computer)
-f.each do |line|
-  time, category = line.split("\t")
-  category.strip!
-  next if oldcategory == category # ignore if someone pressed the same category twice - just count it as one long event
-  
-  unless oldcategory == 0 # if they were resting, and then started an event. we don't count resting.
-    t_spent = time.to_i-oldtime.to_i
-    cumul.add(oldcategory, t_spent)
-    tot_time = tot_time + t_spent
-  end
-  
-  # store it, and move to the next line
-  oldcategory = category 
-  oldtime = time
-end
-
+fail "No time tracked so far today" unless cat
+#text = "Current is #{cat}, spent #{minutes_format(t_elapsed)}.\r\rSo far today:\r"
+text=''
 # list each category, and it's time use
-cumul.each do |x,y| 
-  text << "#{x}: #{minutes_format(y)}\r"
-end
-text << "\rTotal: #{minutes_format(tot_time)}\r"
+cumul, tot_time = get_daily_totals
+puts tot_time
 
 # print hotkeys, as a reminder
-text << "\rHotkeys:\r"
+text << "\rHotkeys:[return][return]"
 Categories.each_with_index do |x,y|
-  text << "#{y}: #{x}\r"
+  text << "#{y}: #{x}[return]"
 end
 
-growl("Use of time today:", text)
+#growl("Use of time today:", text)
+x = cumul.map{|x,y| x}
+y = cumul.map{|x,y| y}
+tot_time=0
+File.open("#{Path}/stats.csv", 'w') do |f|
+  f << "Activities, Minutes\n"
+  cumul.each {|x,y| f << "#{x}, #{y/60.0}\n" if y>1; tot_time += y}
+end
+
+`cd ~;/usr/bin/Rscript #{Path}/test.R`
+
+require 'pashua'
+include Pashua
+
+config = "
+*.title = Time use
+img.type = image
+img.label = Total: #{minutes_format(tot_time)}. Right now: #{cat}, for #{minutes_format(t_elapsed)}
+img.path = #{Path}/plot.pdf
+img.maxwidth = 900
+img.border = 1
+"
+
+pagetmp = pashua_run config
+

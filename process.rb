@@ -1,4 +1,13 @@
+# encoding: utf-8
+
+# researchr scripts relevant to BibDesk (the right one is executed from the bottom of the file)
+
+$:.push(File.dirname($0))
+require 'utility-functions'
+require 'library'
+
 f = File.open('tracker.dat','r')
+
 oldcategory = 0
 oldtime = 0
 f.each do |line|
@@ -16,4 +25,3 @@ f.each do |line|
   oldcategory = category
   oldtime = time
 end
-  
