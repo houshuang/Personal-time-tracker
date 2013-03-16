@@ -9,4 +9,5 @@ require 'settings'
 require 'csv'
 
 cat, t_elapsed = status
-growl "Doing #{cat} (#{minutes_format(t_elapsed)})"
+unless cat == 'break'
+growl "#{cat} (#{minutes_format(t_elapsed)})"

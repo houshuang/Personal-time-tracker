@@ -26,16 +26,17 @@ end
 #growl("Use of time today:", text)
 x = cumul.map{|x,y| x}
 y = cumul.map{|x,y| y}
-tot_time=0
 File.open("#{Path}/stats.csv", 'w') do |f|
   f << "Activities, Minutes\n"
-  cumul.each {|x,y| f << "#{x}, #{y/60.0}\n" if y>1; tot_time += y}
+  cumul.each {|x,y| f << "#{x}, #{y/60.0}\n" if y>1}
 end
 
-`cd ~;/usr/bin/Rscript #{Path}/test.R`
+`cd ~;/usr/bin/Rscript #{Path}/daygraph.R`
 
 require 'pashua'
 include Pashua
+
+
 
 config = "
 *.title = Time use

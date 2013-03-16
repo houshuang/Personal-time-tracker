@@ -11,13 +11,11 @@ require 'rinruby'
 t = Time.now
 oldcat, t_elapsed = status
 
-ensure_file(Filename) # make sure it exists
-
 id = ARGV[0] # key pressed
 
 if id == "="
   # print hotkeys, as a reminder
-  text ="Currently #{oldcat}, #{minutes_format(t_elapsed)} elapsed.\r\r"
+  text = oldcat ? "Currently #{oldcat}, #{minutes_format(t_elapsed)} elapsed.\r\r" : ""  # ensure that there are entries already
   text << "\rHotkeys:\r\r"
   Categories.each_with_index do |x,y|
     text << "#{y}: #{x}\r"
@@ -26,6 +24,7 @@ if id == "="
   exit
 end
 
+ensure_file(Filename) # make sure it exists
 
 cat = Categories[id.to_i]
 

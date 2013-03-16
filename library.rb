@@ -1,4 +1,5 @@
 # encoding: utf-8
+$:.push(File.dirname($0))
 require 'settings'
 # useful functions used by the tracker
 
@@ -89,7 +90,7 @@ def get_daily_totals
     time, category = line.split("\t")
     category.strip!
 
-    unless oldcategory == 0 # if they were resting, and then started an event. we don't count resting.
+    unless oldcategory == "break" || oldcategory == 0 # if they were resting, and then started an event. we don't count resting.
       t_spent = time.to_i-oldtime.to_i
       cumul.add(oldcategory, t_spent)
       tot_time = tot_time + t_spent
