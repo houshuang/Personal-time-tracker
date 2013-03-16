@@ -1,5 +1,6 @@
 Read about this project on my blog:
 http://reganmian.net/blog/2010/04/29/personal-time-tracker-with-ruby-and-growl
+http://reganmian.net/blog/2013/03/16/unobtrusive-time-tracker-visualizing-time-spent-with-ruby-and-r/
 
 Inspired by this New York Times article:
 http://www.nytimes.com/2010/05/02/magazine/02self-measurement-t.html
@@ -9,6 +10,10 @@ from other sources. I release it under Public Domain. But feel free to share
 any modifications. I totally wrote this to scratch my own itch, but if you
 find this, or a version of this, useful, letting me know would totally make my
 day.
+
+Note that the code is pretty messy right now, I'll probably clean it up as I go
+along, but anyway it's a very small project, so it shouldn't be hard to figure
+it out and play around with it.
 
 "INSTALLATION"
 
@@ -31,14 +36,10 @@ configuration and running
   change your status to category 4, write a timestamp in today's file, and pop
   up a short message about that.
 - to display the current status, you run status.rb
+- You also need R with the ggplot2 package installed for the graphs.
 
 growl
-- this program uses growl, which has to be installed (http://growl.info/). It
-  already often is, but in addition, it needs growlnotify. Download and mount
-  the package, and go to the Extras, and then run install.sh to put it in
-  /usr/local/bin. 
-- you also need to go to Growl config and toggle "listen to incoming
-  notifications" under the Network tab
+- this program uses growl, which has to be installed (http://growl.info/).
 
 global hotkeys
 - the whole point of this program is to be extremely unobtrusive and "fit in"
@@ -48,31 +49,16 @@ global hotkeys
   theoretically, you can tie Cmd+Alt S to status, and you can assign all the
   letters in the alphabet to differently numbered categories - I wouldn't
   recommend it though, the point is that there shouldn't be much cognitive
-  load when switching tasks) 
-- I found two ways of assigning global hotkeys, one is to use Automator on
-  Mac, create new workflows that launch the script with different parameters
-  as services, and then assign hot keys to those services in the keyboard
-  control panel
-- The other way is to use FreeHotKeys
-  (http://www.batista.org/freehotkeys.html), a free program which I am
-  currently using. To configure that program, you need to copy the files in
-  the fhk-files directory to the ~/Library/Preferences/FreeHotKeys directory
-  (and do a global search and replace to replace the path to the ruby script
-  with the path where it resides on your system)
+  load when switching tasks)
+- I use Keyboard Maestro to launch the scripts, but you can use whatever tool
+  you're comfortable with. If you use Keyboard Maestro, you can import the
+  macros from macrofile.kmmacros, but first you have to open it in a text
+  editor and search and replace my directory and ruby invocation (don't
+  know of an automatic way of doing this)
 
 TODO:
 - deal with midnight-switch
-- script that processes timestamp files and spits out lists of activities
-  (what format?)
+- more fancy graphs, time series, week/month view, etc
 - replace text files with sqlite?
-- the ideal thing would be to find existing software/website set up to analyze
-  this data, rather than to do it ourselves (can spit out in whatever format
-  is desired, pretty much)
 - create a seamless installer (I am not going to do this, but others are
   welcome to!)
-
-IDEA:
-- use YAML dumping/loading to keep running tallies of different categories:
-  today... first time run after new day, add to tallies for weekly, monthly.
-  (or be able to set a benchmark time - from now on)...
-  
