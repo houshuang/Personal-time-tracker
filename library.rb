@@ -119,5 +119,3 @@ end
 def timeify(timestr)
   DateTime.parse(timestr).to_time.to_i
 end
-
-p get_daily_totals

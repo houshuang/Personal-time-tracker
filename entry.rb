@@ -17,7 +17,8 @@ end
 # returns a line with current activity and time, with a prefix, or empty if no current activity
 def format_status(prefix = '')
   cat, t_elapsed = status
-  cat ? "#{prefix}#{cat}, for #{minutes_format(t_elapsed)}" : ""
+  return "" if !cat or cat == "break"
+  return "#{prefix}#{cat}, for #{minutes_format(t_elapsed)}"
 end
 
 def hotkeys
@@ -63,9 +64,19 @@ def daily_total
   # `rm #{Path}/tmp/plot.pdf; rm #{Path}/tmp/stats.csv`
 end
 
+# called from crontab like this
+# */5 * * * * ruby PATH/Personal-time-tracker/ping.rb
+# idea is to remind you of the category (to avoid forgetting to switch), and keep you on track
+def ping
+  fmt = format_status
+  growl(format_status) if fmt.size > 0
+end
+
 # =========================================================================
 
 print_hotkeys if ARGV[0] == '='
+
+ping if ARGV[0] == 'ping'
 
 daily_total if ARGV[0] == '-'
 
