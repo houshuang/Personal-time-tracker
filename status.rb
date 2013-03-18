@@ -26,7 +26,7 @@ end
 #growl("Use of time today:", text)
 x = cumul.map{|x,y| x}
 y = cumul.map{|x,y| y}
-File.open("#{Path}/stats.csv", 'w') do |f|
+File.open("#{Path}/tmp/stats.csv", 'w') do |f|
   f << "Activities, Minutes\n"
   cumul.each {|x,y| f << "#{x}, #{y/60.0}\n" if y>1}
 end
@@ -42,10 +42,10 @@ config = "
 *.title = Time use
 img.type = image
 img.label = Total: #{minutes_format(tot_time)}. Right now: #{cat}, for #{minutes_format(t_elapsed)}
-img.path = #{Path}/plot.pdf
+img.path = #{Path}/tmp/plot.pdf
 img.maxwidth = 900
 img.border = 1
 "
 
 pagetmp = pashua_run config
-
+`rm #{Path}/tmp/plot.pdf; rm #{Path}/tmp/stats.csv`

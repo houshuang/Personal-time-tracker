@@ -1,6 +1,6 @@
 library(ggplot2)
 #library(scales)
-setwd('~/src/Personal-time-tracker')
+setwd('~/src/Personal-time-tracker/tmp')
 df <- read.csv('stats.csv', header=T)
 a <- ggplot(df, aes(x=Activities, y=Minutes, fill=Activities)) + geom_bar(stat="identity") + geom_text(aes(label=floor(df$Minutes)), size = 3, hjust = 0.5, vjust = 3, position =     "stack")
 #+ scale_y_continuous(trans=log2_trans())
