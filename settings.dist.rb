@@ -12,4 +12,5 @@ Categories = [
   "AVU", #5
   "goofing", #6
   "project 1", #7
-  "project 2"] #8 - #9 is reserved for the status message
+  "project 2",
+  "project 3"]
