@@ -20,12 +20,6 @@ class Hash
   end
 end
 
-def ensure_file(filename)
-  unless File.exist?(filename)
-    File.open(filename, "w") {|f| f << "#{Time.now.to_i}\t#{Categories[0]}\n"}
-  end
-end
-
 # returns the current status, ie. category and time elapsed, or nil if no activity in progress
 def status
   last = try { File.read(Filename).split("\n").pop }# last line
