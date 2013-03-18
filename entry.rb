@@ -3,37 +3,77 @@
 $:.push(File.dirname($0))
 require 'library'
 require 'settings'
-require 'rinruby'
 
-# adds a new entry to the daily ledger, and uses growl to give feedback, and show how long was
-# spent on the previous activity
+# adds a new category to the daily log, takes a category number, and uses the current time
+# using append means that the file will be created if it doesn't already exist
+def log(cat)
+  oldcat, _ = status
+  fail format_status("Already doing ") if oldcat == cat         # to avoid duplicate entries
 
-t = Time.now
-oldcat, t_elapsed = status
+  t = Time.now.to_s # convert to string, strip out timezone
+  File.open(Filename,'a') {|f| f << "#{t}\t#{cat}\n" }
+end
 
-id = ARGV[0] # key pressed
+# returns a line with current activity and time, with a prefix, or empty if no current activity
+def format_status(prefix = '')
+  cat, t_elapsed = status
+  cat ? "#{prefix}#{cat}, for #{minutes_format(t_elapsed)}" : ""
+end
 
-if id == "="
-  # print hotkeys, as a reminder
-  text = oldcat ? "Currently #{oldcat}, #{minutes_format(t_elapsed)} elapsed.\r\r" : ""  # ensure that there are entries already
-  text << "\rHotkeys:\r\r"
+def hotkeys
+  text = "Hotkeys:\r\r"
   Categories.each_with_index do |x,y|
     text << "#{y}: #{x}\r"
   end
-  growl text
-  exit
+
+  return text
 end
 
-ensure_file(Filename) # make sure it exists
+# print hotkeys, as a reminder
+def print_hotkeys
+  text = format_status("Current is ") + "\r\r" + hotkeys
+  growl text
+end
 
-cat = Categories[id.to_i]
+def daily_total
+  cat, t_elapsed = status
+  fail "No time tracked so far today" unless cat
 
-text = "Last was #{oldcat}, spent #{minutes_format(t_elapsed)}."
+  cumul, tot_time = get_daily_totals # list each category, and it's time use
 
-File.open(Filename,'a') {|f| f << "#{Time.now.to_i}\t#{cat}\n" }
-growl(cat, text)
+  File.open("#{Path}/tmp/stats.csv", 'w') do |f|
+    f << "Activity, Minutes\n"
+    cumul.each {|x,y| f << "#{x}, #{y/60.0}\n" if y>1}
+  end
 
-R.eval <<EOF
+  # run the Rscript that generates the PDF
+  `cd ~;/usr/bin/Rscript #{Path}/daygraph.R`
 
+  require 'pashua'
+  include Pashua
+  config = "
+    *.title = Time use
+    img.type = image
+    img.label = Total: #{minutes_format(tot_time)}. Right now, #{format_status()}
+    img.path = #{Path}/tmp/plot.pdf
+    img.maxwidth = 900
+    img.border = 1"
+  pagetmp = pashua_run config
 
-EOF
+  # `rm #{Path}/tmp/plot.pdf; rm #{Path}/tmp/stats.csv`
+end
+
+# =========================================================================
+
+print_hotkeys if ARGV[0] == '='
+
+daily_total if ARGV[0] == '-'
+
+if "0123456789".index(ARGV[0])
+  cat = Categories[ARGV[0].to_i]
+
+  stat = format_status("Last was ")
+  log(cat)
+
+  growl("#{cat}\r\r#{stat}")
+end

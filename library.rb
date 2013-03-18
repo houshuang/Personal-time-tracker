@@ -1,7 +1,14 @@
 # encoding: utf-8
+
 $:.push(File.dirname($0))
 require 'settings'
+require 'date'
+
 # useful functions used by the tracker
+
+t = Time.now
+Filedate = sprintf("%04d.%02d.%02d", t.year, t.month, t.day)
+Filename = Path + "/" + Filedate
 
 class Hash
   def add(var,val)
@@ -13,22 +20,20 @@ class Hash
   end
 end
 
-t = Time.now
-Filedate = sprintf("%04d.%02d.%02d", t.year, t.month, t.day)
-Filename = Path + "/" + Filedate
-
 def ensure_file(filename)
   unless File.exist?(filename)
     File.open(filename, "w") {|f| f << "#{Time.now.to_i}\t#{Categories[0]}\n"}
   end
 end
 
-def status # return the current status, ie. category and time elapsed
+# returns the current status, ie. category and time elapsed, or nil if no activity in progress
+def status
   last = try { File.read(Filename).split("\n").pop }# last line
   return nil unless last
   time, cat = last.split("\t")
-
-  t_elapsed = Time.new.to_i - time.to_i
+  begin_activity = DateTime.parse(time).to_time.to_i
+  curtime = Time.now.to_i
+  t_elapsed = curtime - begin_activity
   return cat.strip, t_elapsed
 end
 
@@ -72,28 +77,28 @@ def try(default = nil, &block)
   end
 end
 
-# go through today's file, and add up all the totals
+# go through today's file, and add up all the totals, returns array of activities and seconds, plus
+# total time spent (seconds)
 def get_daily_totals
-  # get last activity logged
   cumul = Hash.new # will hold the totals for today for each category
 
-  cat, t_elapsed = status
-  cumul.add(cat, t_elapsed) # add the current status to the cumulative totals, because they won't emerge from below
-
-  #ensure_file(Filename) # just to avoid crashing
+  # get last activity logged
+  cumul.add(*status) # add the current status to the cumulative totals, because they won't emerge from below
 
   f = File.open(Filename,'r')
   oldcategory = 0
   oldtime = 0
   tot_time = 0 # spent by all projects today (ie. time in front of the computer)
   f.each do |line|
-    time, category = line.split("\t")
+    next unless line.index("\t")
+    timestr, category = line.split("\t")
+    time = timeify(timestr)
     category.strip!
 
     unless oldcategory == "break" || oldcategory == 0 # if they were resting, and then started an event. we don't count resting.
-      t_spent = time.to_i-oldtime.to_i
+      t_spent = time.to_i - oldtime.to_i
       cumul.add(oldcategory, t_spent)
-      tot_time = tot_time + t_spent
+      tot_time += t_spent
     end
 
     # store it, and move to the next line
@@ -110,3 +115,9 @@ def fail(message)
   growl "Failure!", message
   exit
 end
+
+def timeify(timestr)
+  DateTime.parse(timestr).to_time.to_i
+end
+
+p get_daily_totals
