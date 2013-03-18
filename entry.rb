@@ -40,11 +40,31 @@ def daily_total
   cat, t_elapsed = status
   fail "No time tracked so far today" unless cat
 
-  cumul, tot_time = get_daily_totals # list each category, and it's time use
+  # timeline
+  midnight = timeify(Time.now.to_s[0..10] + Time.now.to_s[-5..-1]) # find midnight
+  log = File.read(Filename) + "#{Time.now.to_s}\tbreak"
+  File.open("#{Path}/tmp/stats-timeline.csv", 'w') do |f|
+    f << "Activities, Start, End\n"
+    last = 0
+    lastc = ''
+    logary = []
+    log.each_line do |l|
+      next unless l.index("\t")
+      t, c = l.split("\t")
+      tt = timeify(t) - midnight
+      f << "#{lastc.strip}, #{last}, #{tt}\n" unless last == 0 || lastc.strip == 'break'
+      last = tt
+      lastc = c
+    end
+  end
 
+  # cumulative stats category/time
+  cumul, tot_time = get_daily_totals # list each category, and it's time use
   File.open("#{Path}/tmp/stats.csv", 'w') do |f|
     f << "Activity, Minutes\n"
-    cumul.each {|x,y| f << "#{x}, #{y/60.0}\n" if y>1}
+    cumul.each do
+      |x,y| f << "#{x}, #{y/60.0}\n" if y>1
+    end
   end
 
   # run the Rscript that generates the PDF
