@@ -55,7 +55,7 @@ def daily_total
   config = "
     *.title = Time use
     img.type = image
-    img.label = Total: #{minutes_format(tot_time)}. Right now, #{format_status()}
+    img.label = Total: #{minutes_format(tot_time)}. #{format_status('Right now, ')}
     img.path = #{Path}/tmp/plot.pdf
     img.maxwidth = 900
     img.border = 1"
