@@ -2,12 +2,6 @@
 - write a blog entry about things to track etc.
 - discuss with Bodong about ways of storing things in R etc
 
-# bugs:
-- when you first choose an activity, when there is no file existing, it creates a file and adds break, no matter what you selected
-
-# feature requests:
-- rewrite dates to use actual dates, easier to parse for R? also easier to change manually. remove time zone.
-
 # to figure out:
 - how to deal with categories, for example I want to track how much time I'll spend preparing the presentation for an upcoming conference, but I also want to track all the time spent preparing for conferences...
   - simply add categories in the settings.rb, for example "Prepare for btpdf2", ['presentation', 'conference', 'OA']
