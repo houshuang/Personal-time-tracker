@@ -8,7 +8,7 @@ require 'date'
 
 t = Time.now
 Filedate = sprintf("%04d.%02d.%02d", t.year, t.month, t.day)
-Filename = Path + "/" + Filedate
+Filename = Path + "/log/" + Filedate
 
 class Hash
   def add(var,val)
