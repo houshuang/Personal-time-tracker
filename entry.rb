@@ -108,3 +108,6 @@ if "0123456789".index(ARGV[0])
 
   growl("#{cat}\r\r#{stat}")
 end
+
+growl "Remember to choose activity" if ARGV[0] == 'remind'
+log("break") if ARGV[0] == '0silent' # on shutdown, don't display growl
