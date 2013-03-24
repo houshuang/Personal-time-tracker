@@ -1,6 +1,13 @@
 # next steps
-- write a blog entry about things to track etc.
 - discuss with Bodong about ways of storing things in R etc
+
+# ideas
+- track when computer is sleeping, use special code for this, ie. can track when at computer or not. "away". when opening computer automatically turn on "surfing".
+- does it make sense to track inactivity? if I'm reading a PDF document, assume that I will still move more than every few minutes... watching movie etc?
+- record last activity before break, and enable toggling back to it (like 3+J in Researchr)
+
+What if you could enter any combination of tags, more specific and less specific, through a pop-up interface
+for example: meeting,laurie. The 10 quick keys would just be arbitrary sets of tags that could be changed at any time... Problem: how to store (of course, or more, how to analyze), and lack of autocompletion?
 
 # to figure out:
 - how to deal with categories, for example I want to track how much time I'll spend preparing the presentation for an upcoming conference, but I also want to track all the time spent preparing for conferences...
@@ -11,7 +18,7 @@
 
 # ideas for things to track:
 
-## things that are easy:
+## things that are possible:
 - Fitocracy API - number of points earned (number of km ridden/walked?)
 - number of PDF documents read, number of pages, length of notes written, other wiki pages
 - history API for Chrome, number of web sites visited? (unique URLs / domains
@@ -20,6 +27,8 @@
   - something already exists? or handwrite using mail library?
 - Twitter/GPlus, not very interesting
 - blog posts written
+- files changed, useful?
+- Kindle, pages read, books read - need SSH
 
 ## manually:
 - some kind of key value store, that is unobtrusive and easy to call up (but how to store the data?)
@@ -30,7 +39,6 @@
   - randomly pop up and ask questions (tired, productive, distracted, happy, etc?)
 
 ## things that are impossible but should be easy:
-- Kindle, pages read, books read
 - activity, sleep etc from Fitbit
 
 # create reports
