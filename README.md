@@ -30,6 +30,9 @@ it out and play around with it.
 - the whole point of this program is to be extremely unobtrusive and "fit in" with your workflow, so of course, you don't want to have to switch to terminal and type "entry 4" every time you start doing something else. I have tied entry 0-8 to Cmd+Opt 0-8, and status to Cmd+Opt 9 (note that theoretically, you can tie Cmd+Alt S to status, and you can assign all the letters in the alphabet to differently numbered categories - I wouldn't recommend it though, the point is that there shouldn't be much cognitive load when switching tasks)
 - I use [Keyboard Maestro](http://www.keyboardmaestro.com/main/) to launch the scripts, but you can use whatever tool you're comfortable with. If you use Keyboard Maestro, you can import the macros from macrofile.kmmacros, but first you have to open it in a text editor and search and replace my directory and ruby invocation (don't know of an automatic way of doing this)
 
+## ipfw
+- currently it tries to block all websites whenever a category that contains the word offline is entered, however this depends on ipfw being setuid (chmod 4755)
+
 # TODO
 - deal with midnight-switch
 - more fancy graphs, time series, week/month view, etc

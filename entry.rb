@@ -6,12 +6,19 @@ require 'settings'
 
 # adds a new category to the daily log, takes a category number, and uses the current time
 # using append means that the file will be created if it doesn't already exist
-def log(cat)
+def log(cat, silent = false)
   oldcat, _ = status
-  fail format_status("Already doing ") if oldcat == cat         # to avoid duplicate entries
+  fail format_status("Already doing ") if oldcat == cat && silent==false         # to avoid duplicate entries
 
   t = Time.now.to_s # convert to string, strip out timezone
   File.open(Filename,'a') {|f| f << "#{t}\t#{cat}\n" }
+
+  # trigger internet connection depending on category
+  if cat.index('offline') && !oldcat.index('offline')
+    internet(false)
+  elsif oldcat.index('offline')
+    internet(true)
+  end
 end
 
 # returns a line with current activity and time, with a prefix, or empty if no current activity
@@ -110,4 +117,4 @@ if "0123456789".index(ARGV[0])
 end
 
 growl "Remember to choose activity" if ARGV[0] == 'remind'
-log("break") if ARGV[0] == '0silent' # on shutdown, don't display growl
+log("break", silent=true) if ARGV[0] == '0silent' # on shutdown, don't display growl

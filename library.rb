@@ -20,6 +20,15 @@ class Hash
   end
 end
 
+# enable or disable internet by temporarily replacing HOSTS file with one that blocks all connections
+def internet(status) # true = on, false = off
+  if status # enable
+    `ipfw -q flush`
+  else
+    `ipfw add deny all from any to any`
+  end
+end
+
 # returns the current status, ie. category and time elapsed, or nil if no activity in progress
 def status
   last = try { File.read(Filename).split("\n").pop }# last line
