@@ -9,6 +9,8 @@
 What if you could enter any combination of tags, more specific and less specific, through a pop-up interface
 for example: meeting,laurie. The 10 quick keys would just be arbitrary sets of tags that could be changed at any time... Problem: how to store (of course, or more, how to analyze), and lack of autocompletion?
 
+Probably end up using an sqlite3 database to store, figure out which library/ORM that is easy to use/lightweight. Sequel? Define day as 05:01AM to 05:00AM, write day field as well as Time stamp (Time.now.to_date - 5.hours?). Draw several days' timelines under each other, with vertical lines for 8AM, 5PM, 11PM. Create a activity chooser with Pashua and see if it gets used more than the shortcuts (also show shortcuts). Probably just projects + one level of category, exclusive. Dashboard with lights, for example green for >4 hr of PhD work per day, show long view (one month etc).
+
 # to figure out:
 - how to deal with categories, for example I want to track how much time I'll spend preparing the presentation for an upcoming conference, but I also want to track all the time spent preparing for conferences...
   - simply add categories in the settings.rb, for example "Prepare for btpdf2", ['presentation', 'conference', 'OA']
