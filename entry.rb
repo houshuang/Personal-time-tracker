@@ -21,6 +21,30 @@ def log(cat, silent = false)
   end
 end
 
+# display a list of categories, and allow entering new ones (for now, not saved anywhere)
+def select_list
+  require 'pashua'
+  include Pashua
+
+  config = "
+  *.title = personal time tracker
+  cb.type = combobox
+  cb.completion = 2
+  cb.width = 400
+  cb.default = surfing
+  cb.tooltip = Choose from the list
+  db.type = cancelbutton
+  db.label = Cancel
+  db.tooltip = Closes this window without taking action" + "\n"
+
+  # insert list of all choices
+  Categories.each { |c| config << "cb.option = #{c}\n" }
+  pagetmp = pashua_run config
+  exit if pagetmp['cancel'] == 1 || pagetmp['cb'] == nil
+
+  log pagetmp['cb'].strip
+end
+
 # returns a line with current activity and time, with a prefix, or empty if no current activity
 def format_status(prefix = '')
   cat, t_elapsed = status
@@ -102,6 +126,9 @@ end
 # =========================================================================
 
 print_hotkeys if ARGV[0] == '='
+
+select_list if ARGV[0] == 'list'
+
 
 ping if ARGV[0] == 'ping'
 
