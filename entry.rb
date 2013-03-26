@@ -56,6 +56,7 @@ def select_list
   exit if pagetmp['cancel'] == 1 || pagetmp['cb'] == nil
 
   choice = pagetmp['cb'].strip
+  notify_change(choice)
   log(choice)
 
   unless cat.index(choice)
@@ -142,8 +143,12 @@ def ping
   growl(format_status) if fmt.size > 0
 end
 
-# =========================================================================
+def notify_change(cat)
+  stat = format_status("Last was ")
+  growl("#{cat}\r\r#{stat}")
+end
 
+# =========================================================================
 print_hotkeys if ARGV[0] == '='
 
 select_list if ARGV[0] == 'list'
@@ -156,10 +161,8 @@ daily_total if ARGV[0] == '-'
 if "0123456789".index(ARGV[0])
   cat = Categories[ARGV[0].to_i]
 
-  stat = format_status("Last was ")
+  notify_change(cat) # must be before log, to show previous activity
   log(cat)
-
-  growl("#{cat}\r\r#{stat}")
 end
 
 growl "Remember to choose activity" if ARGV[0] == 'remind'
