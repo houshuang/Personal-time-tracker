@@ -21,6 +21,17 @@ def log(cat, silent = false)
   end
 end
 
+def get_custom_cats
+  path = "#{Path}/usercategories.txt"
+  return nil unless File.exists?(path)
+  return try { File.read(path).split("\n") }
+end
+
+def write_custom_cats(cats)
+  path = "#{Path}/usercategories.txt"
+  File.open(path, 'w') { |f| f << cats.join("\n") }
+end
+
 # display a list of categories, and allow entering new ones (for now, not saved anywhere)
 def select_list
   require 'pashua'
@@ -38,11 +49,19 @@ def select_list
   db.tooltip = Closes this window without taking action" + "\n"
 
   # insert list of all choices
-  Categories.each { |c| config << "cb.option = #{c}\n" }
+  cust = get_custom_cats || []
+  cat = (cust ? cust + Categories : Categories)
+  cat.each { |c| config << "cb.option = #{c}\n" }
   pagetmp = pashua_run config
   exit if pagetmp['cancel'] == 1 || pagetmp['cb'] == nil
 
-  log pagetmp['cb'].strip
+  choice = pagetmp['cb'].strip
+  log(choice)
+
+  unless cat.index(choice)
+    cust << choice
+    write_custom_cats(cust)
+  end
 end
 
 # returns a line with current activity and time, with a prefix, or empty if no current activity
