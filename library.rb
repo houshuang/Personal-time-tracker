@@ -82,17 +82,16 @@ end
 
 # go through today's file, and add up all the totals, returns array of activities and seconds, plus
 # total time spent (seconds)
-def get_daily_totals
+def get_daily_totals(log)
   cumul = Hash.new # will hold the totals for today for each category
 
   # get last activity logged
   cumul.add(*status) # add the current status to the cumulative totals, because they won't emerge from below
 
-  f = File.open(Filename,'r')
   oldcategory = 0
   oldtime = 0
   tot_time = 0 # spent by all projects today (ie. time in front of the computer)
-  f.each do |line|
+  log.each_line do |line|
     next unless line.index("\t")
     timestr, category = line.split("\t")
     time = timeify(timestr)

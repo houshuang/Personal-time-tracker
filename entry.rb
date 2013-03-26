@@ -109,7 +109,7 @@ def daily_total
   end
 
   # cumulative stats category/time
-  cumul, tot_time = get_daily_totals # list each category, and it's time use
+  cumul, tot_time = get_daily_totals(log) # list each category, and it's time use
   File.open("#{Path}/tmp/stats.csv", 'w') do |f|
     f << "Activity, Minutes\n"
     cumul.each do
