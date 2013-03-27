@@ -122,9 +122,9 @@ def daily_total(date = 'now')
   # cumulative stats category/time
   cumul, tot_time = get_daily_totals(log) # list each category, and it's time use
   File.open("#{Path}/tmp/stats.csv", 'w') do |f|
-    f << "Activity, Minutes\n"
+    f << "Activity, Minutes, Time\n"
     cumul.each do
-      |x,y| f << "#{x}, #{y/60.0}\n" if y>1
+      |x,y| f << "#{x}, #{y/60.0}, #{minutes_format(y)}\n" if y>1
     end
   end
 
