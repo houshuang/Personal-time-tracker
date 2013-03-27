@@ -33,7 +33,7 @@ end
 def status
   last = try { File.read(Filename).split("\n").pop }# last line
   return nil unless last
-  time, cat = last.split("\t")
+  time, cat = last.split(",")
   begin_activity = DateTime.parse(time).to_time.to_i
   curtime = Time.now.to_i
   t_elapsed = curtime - begin_activity
@@ -92,8 +92,8 @@ def get_daily_totals(log)
   oldtime = 0
   tot_time = 0 # spent by all projects today (ie. time in front of the computer)
   log.each_line do |line|
-    next unless line.index("\t")
-    timestr, category = line.split("\t")
+    next unless line.index(",")
+    timestr, category = line.split(",")
     time = timeify(timestr)
     category.strip!
 

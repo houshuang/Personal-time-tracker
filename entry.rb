@@ -11,7 +11,7 @@ def log(cat, silent = false)
   fail format_status("Already doing ") if oldcat == cat && silent==false         # to avoid duplicate entries
 
   t = Time.now.to_s # convert to string, strip out timezone
-  File.open(Filename,'a') {|f| f << "#{t}\t#{cat}\n" }
+  File.open(Filename,'a') {|f| f << "#{t},#{cat}\n" }
 
   # trigger internet connection depending on category
   if cat.index('offline') && !oldcat.index('offline')
@@ -87,21 +87,31 @@ def print_hotkeys
   growl text
 end
 
-def daily_total
+def daily_total(date = 'now')
   cat, t_elapsed = status
   fail "No time tracked so far today" unless cat
 
+  if date == 'now'
+    timespec = Time.now.to_s[0..10] + " 00:00:00 " + Time.now.to_s[-5..-1] # find midnight
+    fname = Filename
+  else
+    timespec = date + " 00:00:00 " + Time.now.to_s[-5..-1]
+    t = Time.at(timeify(timespec))
+    fname = Path + "/log/" + sprintf("%04d.%02d.%02d", t.year, t.month, t.day)
+  end
+
   # timeline
-  midnight = timeify(Time.now.to_s[0..10] + "00:00:00 " + Time.now.to_s[-5..-1]) # find midnight
-  log = File.read(Filename) + "#{Time.now.to_s}\tbreak"
+  midnight = timeify(timespec) # find midnight
+  log = File.read(fname)
+  log << "#{Time.now.to_s},break" if date == 'now'
   File.open("#{Path}/tmp/stats-timeline.csv", 'w') do |f|
     f << "Activities, Start, End\n"
     last = 0
     lastc = ''
     logary = []
     log.each_line do |l|
-      next unless l.index("\t")
-      t, c = l.split("\t")
+      next unless l.index(",")
+      t, c = l.split(",")
       tt = timeify(t) - midnight
       f << "#{lastc.strip}, #{last}, #{tt}\n" unless last == 0 || lastc.strip == 'break'
       last = tt
@@ -126,13 +136,20 @@ def daily_total
   config = "
     *.title = Time use
     img.type = image
-    img.label = Total: #{minutes_format(tot_time)}. #{format_status('Right now, ')}
+    img.label = #{"#{date}." unless date=='now'} Total: #{minutes_format(tot_time)}. #{format_status('Right now, ') if date == 'now'}
     img.path = #{Path}/tmp/plot.pdf
     img.maxwidth = 900
-    img.border = 1"
-  pagetmp = pashua_run config
+    img.border = 1
+    cb.type = combobox
+    cb.completion = 2
+    cb.width = 300
+    cb.default = View earlier dates
+    cb.tooltip = Choose from the list
+    "
 
-  # `rm #{Path}/tmp/plot.pdf; rm #{Path}/tmp/stats.csv`
+  Dir["#{Path}/log/*.*.*"].each {|l| config << "cb.option = #{File.basename(l)}\n"}
+  pagetmp = pashua_run config
+  daily_total(pagetmp['cb'].strip) unless pagetmp['cb'].strip == 'View earlier dates'
 end
 
 # called from crontab like this
@@ -149,10 +166,10 @@ def notify_change(cat)
 end
 
 # =========================================================================
+
 print_hotkeys if ARGV[0] == '='
 
 select_list if ARGV[0] == 'list'
-
 
 ping if ARGV[0] == 'ping'
 
