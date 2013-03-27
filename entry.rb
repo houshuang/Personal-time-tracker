@@ -124,7 +124,7 @@ def daily_total(date = 'now')
   File.open("#{Path}/tmp/stats.csv", 'w') do |f|
     f << "Activity, Minutes, Time\n"
     cumul.each do
-      |x,y| f << "#{x}, #{y/60.0}, #{minutes_format(y)}\n" if y>1
+      |x,y| f << "#{x}, #{y/60.0}, #{minutes_format(y)}\n" if y>1 && x != 'break'
     end
   end
 
