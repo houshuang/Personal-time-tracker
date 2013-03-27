@@ -16,7 +16,12 @@ bplot <-ggplot(df2, aes(colour=Activities)) + geom_segment(aes(x=Start, xend=End
   scale_x_continuous(breaks=(a)*60*60, labels=a) +
   xlab("Time") +
   ylab("") +
-  scale_y_continuous(breaks=NULL, limits=c(-.1,.1) )
+  scale_y_continuous(breaks=NULL, limits=c(-.1,.1) ) +
+  geom_vline(xintercept = 8*60*60, color='red') +
+  geom_vline(xintercept = 17*60*60, color='red') +
+  geom_vline(xintercept = 23*60*60, color='red')
+  #geom_vline(xintercept = 0:23*60*60, color='grey') # need to avoid drawing lots of lines before start of work
+
 
 grid.newpage()
 pushViewport(viewport(layout=grid.layout(2,1)))
