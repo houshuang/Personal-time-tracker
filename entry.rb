@@ -92,7 +92,7 @@ def daily_total
   fail "No time tracked so far today" unless cat
 
   # timeline
-  midnight = timeify(Time.now.to_s[0..10] + Time.now.to_s[-5..-1]) # find midnight
+  midnight = timeify(Time.now.to_s[0..10] + "00:00:00 " + Time.now.to_s[-5..-1]) # find midnight
   log = File.read(Filename) + "#{Time.now.to_s}\tbreak"
   File.open("#{Path}/tmp/stats-timeline.csv", 'w') do |f|
     f << "Activities, Start, End\n"
