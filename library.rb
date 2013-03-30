@@ -121,3 +121,42 @@ end
 def timeify(timestr)
   DateTime.parse(timestr).to_time.to_i
 end
+
+def gen_weekly_stats
+  days = Dir.glob(Path + "/log/*.*.*", File::FNM_CASEFOLD).sort {|x,y| y <=> x}[0..6]
+
+  activity_total = Hash.new
+  traffic = Array.new
+  weektot = 0
+  traffic = File.open(Path + "/tmp/traffic.csv", 'w')
+  traffic << "Sequence,Day,Performance\n"
+  weeklytot = File.open(Path + "/tmp/weeklytot.csv", 'w')
+  weeklytot << "Activity,Seconds,Time\n"
+
+  days.each_with_index do |day, i|
+    log = File.read(day)
+    tot = get_daily_totals(log)
+    tot[0].each_pair {|x, y| activity_total.add(x, y) }
+    weektot += tot[1]
+
+    dayname = day[Path.size + 5..-1]
+    phdtot = 0
+    tot[0].each_pair {|x, y| phdtot += y if x.downcase.index('phd') }
+    traffic_color = case
+    when phdtot < 2*60*60
+      'red'
+    when phdtot < 4*60*60
+      'yellow'
+    when phdtot > 4*60*60
+      'green'
+    end
+
+    traffic << "#{i + 1},#{dayname},#{traffic_color}\n"
+  end
+  activity_total.each_pair {|x, y| weeklytot << "#{x},#{y},#{minutes_format(y)}\n"}
+  weeklytot << "Total,#{weektot},#{minutes_format(weektot)}\n"
+  weeklytot << "Average,#{weektot/7},#{minutes_format(weektot/7)}\n"
+  traffic.close
+  weeklytot.close
+  return weektot
+end

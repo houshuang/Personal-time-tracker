@@ -128,6 +128,8 @@ def daily_total(date = 'now')
     end
   end
 
+  gen_weekly_stats
+
   # run the Rscript that generates the PDF
   `cd ~;/usr/bin/Rscript #{Path}/daygraph.R`
 
@@ -138,7 +140,7 @@ def daily_total(date = 'now')
     img.type = image
     img.label = #{"#{date}." unless date=='now'} Total: #{minutes_format(tot_time)}. #{format_status('Right now, ') if date == 'now'}
     img.path = #{Path}/tmp/plot.pdf
-    img.maxwidth = 900
+    img.maxwidth = 1200
     img.border = 1
     cb.type = combobox
     cb.completion = 2
