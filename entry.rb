@@ -160,8 +160,11 @@ def daily_total(date = 'now')
   daily_total(pagetmp['cb'].strip) unless pagetmp['cb'].strip == 'View earlier dates'
 end
 
-def daily_tot_current_cat
-  cat, _ = status
+# returns how much time has been spent on the current category so far today
+# or optionally on another category
+# PhD categories are condensed
+def daily_tot_current_cat(category = nil)
+  cat = category || status[0]
   totals = get_daily_totals(File.read(Filename))[0]
   if cat.downcase.index('phd')
     tot = 0
@@ -187,8 +190,8 @@ def ping
 end
 
 def notify_change(cat)
-  stat = format_status("Last was ")
-  growl("#{cat}\r\r#{stat}")
+  last = format_status("Last was ")
+  growl("#{cat}","#{daily_tot_current_cat(cat)}\r\r#{last}")
 end
 
 # =========================================================================

@@ -55,6 +55,7 @@ def growl(title, text='', url='')
 end
 
 def minutes_format(sec)
+  sec = 60 if sec == nil || sec < 60
   min = sec / 60.0
   out = ''
   if min > 60
