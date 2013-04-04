@@ -62,7 +62,7 @@ def minutes_format(sec)
     min = min - (hr.to_i * 60)
     out << "#{hr.to_i} hrs "
   end
-  out << "#{min.to_i} min" if min > 0
+  out << "#{min.to_i} min" if min.to_i > 0
   out
 end
 

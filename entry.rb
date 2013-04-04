@@ -83,8 +83,7 @@ end
 
 # print hotkeys, as a reminder
 def print_hotkeys
-  text = format_status("Current is ") + "\r\r" + hotkeys
-  growl text
+  growl(format_status("Current is ") + "\r" + daily_tot_current_cat, hotkeys)
 end
 
 def daily_total(date = 'now')
@@ -133,12 +132,19 @@ def daily_total(date = 'now')
   # run the Rscript that generates the PDF
   `cd ~;/usr/bin/Rscript #{Path}/daygraph.R`
 
+  total = "Total: #{minutes_format(tot_time)}."
+  if date == 'now'
+    label = "#{total} #{format_status('Right now, ')}. #{daily_tot_current_cat}"
+  else
+    label = "#{date}. #{total}"
+  end
+
   require 'pashua'
   include Pashua
   config = "
     *.title = Time use
     img.type = image
-    img.label = #{"#{date}." unless date=='now'} Total: #{minutes_format(tot_time)}. #{format_status('Right now, ') if date == 'now'}
+    img.label = #{label}
     img.path = #{Path}/tmp/plot.pdf
     img.maxwidth = 1200
     img.border = 1
@@ -154,12 +160,30 @@ def daily_total(date = 'now')
   daily_total(pagetmp['cb'].strip) unless pagetmp['cb'].strip == 'View earlier dates'
 end
 
+def daily_tot_current_cat
+  cat, _ = status
+  totals = get_daily_totals(File.read(Filename))[0]
+  if cat.downcase.index('phd')
+    tot = 0
+    totals.each {|c, sec| tot += sec if c.downcase.index('phd') }
+    incl = "(all PhD)"
+  else
+    tot = totals[cat]
+    incl = ''
+  end
+  return "#{minutes_format(tot)} so far today #{incl}"
+end
+
 # called from crontab like this
 # */5 * * * * ruby PATH/Personal-time-tracker/ping.rb
 # idea is to remind you of the category (to avoid forgetting to switch), and keep you on track
 def ping
+  exit unless status[1].to_i > 4*60 # only display if more than 5 minutes have passed
+
   fmt = format_status
-  growl(format_status) if fmt.size > 0
+  today = daily_tot_current_cat
+
+  growl(fmt, today) if fmt.size > 0 && status[1] >> 4
 end
 
 def notify_change(cat)
