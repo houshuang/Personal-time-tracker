@@ -145,7 +145,7 @@ def gen_weekly_stats
     tot[0].each_pair {|x, y| phdtot += y if x.downcase.index('phd') }
     traffic_color = case
     when phdtot < 2*60*60
-      'red'
+      day == Filename ? 'grey' : 'red'  # only grey if current day, still possible
     when phdtot < 4*60*60
       'yellow'
     when phdtot > 4*60*60
