@@ -85,7 +85,7 @@ end
 # total time spent (seconds)
 def get_daily_totals(log)
   cumul = Hash.new # will hold the totals for today for each category
-
+  return [] if log == nil
   # get last activity logged
   cumul.add(*status) # add the current status to the cumulative totals, because they won't emerge from below
 

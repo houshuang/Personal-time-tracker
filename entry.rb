@@ -165,7 +165,9 @@ end
 # PhD categories are condensed
 def daily_tot_current_cat(category = nil)
   cat = category || status[0]
-  totals = get_daily_totals(File.read(Filename))[0]
+  return "" if cat == nil
+  totals = get_daily_totals(try {File.read(Filename)})[0]
+  return "" if totals == nil
   if cat.downcase.index('phd')
     tot = 0
     totals.each {|c, sec| tot += sec if c.downcase.index('phd') }
