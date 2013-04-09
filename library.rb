@@ -25,7 +25,7 @@ def internet(status) # true = on, false = off
   if status # enable
     `ipfw -q flush`
   else
-    `ipfw add deny all from any to any`
+    `ipfw add allow all from any to 127.0.0.1;ipfw add deny all from any to any`
   end
 end
 
