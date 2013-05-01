@@ -184,6 +184,7 @@ end
 # idea is to remind you of the category (to avoid forgetting to switch), and keep you on track
 def ping
   exit unless status[1].to_i > 4*60 # only display if more than 5 minutes have passed
+  exit if File.exists?(Path + "/noremind")
 
   fmt = format_status
   today = daily_tot_current_cat
