@@ -137,7 +137,8 @@ def gen_weekly_stats
   days.each_with_index do |day, i|
     log = File.read(day)
     tot = get_daily_totals(log)
-    tot[0].each_pair {|x, y| activity_total.add(x, y) }
+    tot[0].each_pair {|x, y|
+      activity_total.add(x, y) unless x == "surfing" }
     weektot += tot[1]
 
     dayname = day[Path.size + 5..-1]
